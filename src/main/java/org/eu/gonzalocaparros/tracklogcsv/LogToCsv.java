@@ -25,7 +25,7 @@ public class LogToCsv {
 
         final String logHtml = doc.html();
 
-//        final List<String> headers = extractRow(doc.select("#content > table > thead > tr"));
+        final List<String> headers = extractRow(doc.select("#content > table > thead > tr").first());
 
         final Elements elements = doc.select("#content > table > tbody > tr");
 
@@ -43,7 +43,11 @@ public class LogToCsv {
         Files.writeString(Paths.get(outputHtmlFilePath), logHtml);
 
         StringWriter sw = new StringWriter();
-        CSVPrinter csvPrinter = new CSVPrinter(sw, CSVFormat.DEFAULT);
+        CSVFormat aDefault = CSVFormat.DEFAULT.builder()
+                .setHeader(headers.toArray(String[]::new))
+                .build();
+
+        CSVPrinter csvPrinter = new CSVPrinter(sw, aDefault);
         csvPrinter.printRecords(rows);
 
         final String outputCsvFilePath = outputFilename + ".csv";
