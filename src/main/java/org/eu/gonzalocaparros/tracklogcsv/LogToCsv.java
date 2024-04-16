@@ -30,7 +30,7 @@ public class LogToCsv {
         final Elements elements = doc.select("#content > table > tbody > tr");
 
         final List<List<String>> rows = elements.stream()
-                .skip(1)
+                .filter(e -> !e.hasClass("header") && !e.hasClass("spacer"))
                 .map(LogToCsv::extractRow)
                 .toList();
 
