@@ -8,10 +8,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LogToCsv {
 
@@ -54,6 +56,20 @@ public class LogToCsv {
         Files.writeString(Paths.get(outputCsvFilePath), sw.toString());
 
         csvPrinter.close();
+
+        final String coordinatesString = rows.stream()
+                .map(r -> String.format("%s,%s,0", r.get(3), r.get(2)))
+                .collect(Collectors.joining("\n"));
+
+        final InputStream is = LogToCsv.class.getClassLoader().getResourceAsStream("simple-line-string-kml-document-template.kml");
+        final String templateKml = new String(is.readAllBytes());
+        is.close();
+
+        final String kmlString = String.format(templateKml, outputFilename, outputFilename, coordinatesString);
+
+        final String outputKmlFilePath = outputFilename + ".kml";
+        Files.writeString(Paths.get(outputKmlFilePath), kmlString);
+
     }
 
     private static List<String> extractRow(Element element) {
