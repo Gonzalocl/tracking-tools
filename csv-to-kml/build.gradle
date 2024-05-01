@@ -5,6 +5,11 @@ plugins {
 group 'org.eu.gonzalocaparros'
 version '0.1'
 
+java {
+    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
 repositories {
     mavenCentral()
 }
