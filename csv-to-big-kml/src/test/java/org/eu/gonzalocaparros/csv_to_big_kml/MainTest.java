@@ -13,7 +13,7 @@ public class MainTest {
     private static final Path testCsvFilePath = Path.of("test.csv");
 
     @Test
-    public void csvFileStateFileOk() throws IOException {
+    public void csvFileState_okFileTest() throws IOException {
 
         String csv = """
                 a,b,c
@@ -22,6 +22,50 @@ public class MainTest {
                 """;
 
         csvFileStateTest(csv, Main.TrackingCsvState.OK);
+    }
+
+    @Test
+    public void csvFileState_lastLineNoNewLineTest() throws IOException {
+
+        String csv = """
+                a,b,c
+                d,e,f
+                g,h,i""";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.LAST_LINE_ERROR);
+    }
+
+    @Test
+    public void csvFileState_lastLineIncompleteTest() throws IOException {
+
+        String csv = """
+                a,b,c
+                d,e,f
+                g,h,""";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.LAST_LINE_ERROR);
+    }
+
+    @Test
+    public void csvFileState_lastLineMissingColonTest() throws IOException {
+
+        String csv = """
+                a,b,c
+                d,e,f
+                g,h""";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.LAST_LINE_ERROR);
+    }
+
+    @Test
+    public void csvFileState_lastLineOneCharacterTest() throws IOException {
+
+        String csv = """
+                a,b,c
+                d,e,f
+                g""";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.LAST_LINE_ERROR);
     }
 
     private void csvFileStateTest(String csv, Main.TrackingCsvState expected) throws IOException {
