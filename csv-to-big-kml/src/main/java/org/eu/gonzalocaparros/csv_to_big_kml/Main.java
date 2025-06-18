@@ -4,10 +4,13 @@ import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -39,11 +42,23 @@ public class Main {
 
     private static Optional<String> processCsvFile(Path path) {
 
-        try (var channel = Files.newByteChannel(path)) {
+        try (var channel = Files.newByteChannel(path);
+             var reader = Channels.newReader(channel, Charset.defaultCharset())) {
 
             var state = csvFileState(channel);
 
             System.out.println(path + " " + state);
+
+            if (state == TrackingCsvState.OK) {
+
+                var coordinates = csvFormat.parse(reader).stream()
+                        .map(r -> String.format("%s,%s,0", r.get(TrackingCsvHeaders.longitude), r.get(TrackingCsvHeaders.latitude)))
+                        .collect(Collectors.joining("\n"));
+
+                var placemark = String.format(PLACEMARK_TEMPLATE, coordinates);
+
+                return Optional.of(placemark);
+            }
         } catch (IOException e) {
 
             throw new RuntimeException(e);
