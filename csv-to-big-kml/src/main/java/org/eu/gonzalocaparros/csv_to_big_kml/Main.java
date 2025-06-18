@@ -16,6 +16,9 @@ public class Main {
             .setHeader(TrackingCsvHeaders.class)
             .build();
 
+    private static final String PLACEMARK_TEMPLATE = getResourceAsString("templates/placemark.kml");
+    private static final String DOCUMENT_TEMPLATE = getResourceAsString("templates/document.kml");
+
     public static void main(String[] args) {
 
         if (args.length != 2) {
@@ -80,6 +83,16 @@ public class Main {
         if (byteBuffer.get(0) == 0x0A) return TrackingCsvState.OK;
 
         return TrackingCsvState.LAST_LINE_ERROR;
+    }
+
+    private static String getResourceAsString(String resourceName) {
+
+        try (var resourceAsStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {
+            return new String(resourceAsStream.readAllBytes());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     enum TrackingCsvHeaders {
