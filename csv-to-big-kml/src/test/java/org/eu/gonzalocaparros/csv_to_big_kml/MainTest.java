@@ -68,6 +68,57 @@ public class MainTest {
         csvFileStateTest(csv, Main.TrackingCsvState.LAST_LINE_ERROR);
     }
 
+    @Test
+    public void csvFileState_oneLineOkFileTest() throws IOException {
+
+        String csv = """
+                a,b,c
+                g,h,i
+                """;
+
+        csvFileStateTest(csv, Main.TrackingCsvState.OK);
+    }
+
+    @Test
+    public void csvFileState_oneLineNoNewLineTest() throws IOException {
+
+        String csv = """
+                a,b,c
+                g,h,i""";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
+    }
+
+    @Test
+    public void csvFileState_oneLineIncompleteTest() throws IOException {
+
+        String csv = """
+                a,b,c
+                g,h,""";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
+    }
+
+    @Test
+    public void csvFileState_oneLineMissingColonTest() throws IOException {
+
+        String csv = """
+                a,b,c
+                g,h""";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
+    }
+
+    @Test
+    public void csvFileState_oneLineOneCharacterTest() throws IOException {
+
+        String csv = """
+                a,b,c
+                g""";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
+    }
+
     private void csvFileStateTest(String csv, Main.TrackingCsvState expected) throws IOException {
 
         Files.writeString(testCsvFilePath, csv);
