@@ -3,6 +3,7 @@ package org.eu.gonzalocaparros.csv_to_big_kml;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,16 +32,42 @@ public class Main {
 
             throw new RuntimeException(e);
         }
-
     }
 
     private static void processCsvFile(Path path) {
 
     }
 
-    public static TrackingCsvState csvFileState(SeekableByteChannel channel) {
+    public static TrackingCsvState csvFileState(SeekableByteChannel channel) throws IOException {
 
-        return TrackingCsvState.EMPTY;
+        long size = channel.size();
+
+        if (size == 0) return TrackingCsvState.EMPTY;
+
+        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+
+        int readBytes = channel.read(byteBuffer);
+        byteBuffer.position(0);
+
+        int newLineFound = 0, i = 0;
+
+        while (i < readBytes && newLineFound < 2) {
+            i++;
+
+            if (byteBuffer.get() == 0x0A) newLineFound++;
+        }
+
+        if (readBytes == i || newLineFound < 2) return TrackingCsvState.EMPTY;
+
+        channel.position(size - 1);
+        byteBuffer.position(0);
+        readBytes = channel.read(byteBuffer);
+
+        if (readBytes != 1) throw new RuntimeException();
+
+        if (byteBuffer.get(0) == 0x0A) return TrackingCsvState.OK;
+
+        return TrackingCsvState.LAST_LINE_ERROR;
     }
 
     enum TrackingCsvHeaders {
