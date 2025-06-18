@@ -165,6 +165,22 @@ public class MainTest {
         csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
     }
 
+    @Test
+    public void csvFileState_onlyNewLineFileTest() throws IOException {
+
+        String csv = "\n";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
+    }
+
+    @Test
+    public void csvFileState_emptyFileTest() throws IOException {
+
+        String csv = "";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
+    }
+
     private void csvFileStateTest(String csv, Main.TrackingCsvState expected) throws IOException {
 
         Files.writeString(testCsvFilePath, csv);
