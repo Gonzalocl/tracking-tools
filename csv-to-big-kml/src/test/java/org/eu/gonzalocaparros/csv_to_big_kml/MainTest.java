@@ -119,6 +119,52 @@ public class MainTest {
         csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
     }
 
+    @Test
+    public void csvFileState_headerLineOnlyTest() throws IOException {
+
+        String csv = """
+                g,h,i
+                """;
+
+        csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
+    }
+
+    @Test
+    public void csvFileState_headerLineNoNewLineTest() throws IOException {
+
+        String csv = """
+                g,h,i""";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
+    }
+
+    @Test
+    public void csvFileState_headerLineIncompleteTest() throws IOException {
+
+        String csv = """
+                g,h,""";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
+    }
+
+    @Test
+    public void csvFileState_headerLineMissingColonTest() throws IOException {
+
+        String csv = """
+                g,h""";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
+    }
+
+    @Test
+    public void csvFileState_headerLineOneCharacterTest() throws IOException {
+
+        String csv = """
+                g""";
+
+        csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
+    }
+
     private void csvFileStateTest(String csv, Main.TrackingCsvState expected) throws IOException {
 
         Files.writeString(testCsvFilePath, csv);
