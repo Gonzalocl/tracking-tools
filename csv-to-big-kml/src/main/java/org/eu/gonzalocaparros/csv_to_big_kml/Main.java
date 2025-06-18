@@ -32,8 +32,16 @@ public class Main {
 
         try (var files = Files.list(Path.of(args[0]))) {
 
-            files.filter(f -> f.toString().endsWith(".csv"))
-                    .forEach(Main::processCsvFile);
+            var placemarks = files.filter(f -> f.toString().endsWith(".csv"))
+                    .map(Main::processCsvFile)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.joining("\n"));
+
+            var document = String.format(DOCUMENT_TEMPLATE, placemarks);
+
+            Files.writeString(Path.of(args[1]), document);
+
         } catch (IOException e) {
 
             throw new RuntimeException(e);
