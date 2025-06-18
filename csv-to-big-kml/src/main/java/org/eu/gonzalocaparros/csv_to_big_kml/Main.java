@@ -63,7 +63,9 @@ public class Main {
                         .map(r -> String.format("%s,%s,0", r.get(TrackingCsvHeaders.longitude), r.get(TrackingCsvHeaders.latitude)))
                         .collect(Collectors.joining("\n"));
 
-                var placemark = String.format(PLACEMARK_TEMPLATE, coordinates);
+                var placemarkName = path.getFileName().toString().substring(0, 19);
+
+                var placemark = String.format(PLACEMARK_TEMPLATE, placemarkName, coordinates);
 
                 return Optional.of(placemark);
             }
