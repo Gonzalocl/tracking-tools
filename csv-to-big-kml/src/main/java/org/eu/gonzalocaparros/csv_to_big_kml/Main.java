@@ -3,6 +3,7 @@ package org.eu.gonzalocaparros.csv_to_big_kml;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -37,8 +38,17 @@ public class Main {
 
     }
 
+    public static TrackingCsvState csvFileState(SeekableByteChannel channel) {
+
+        return TrackingCsvState.EMPTY;
+    }
+
     enum TrackingCsvHeaders {
         latitude, longitude, altitude, accuracy, timestamp
+    }
+
+    enum TrackingCsvState {
+        OK, EMPTY, LAST_LINE_ERROR
     }
 
 }
