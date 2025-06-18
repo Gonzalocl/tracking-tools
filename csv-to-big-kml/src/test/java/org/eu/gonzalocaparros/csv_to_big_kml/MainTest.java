@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -15,7 +14,7 @@ public class MainTest {
     @Test
     public void csvFileState_okFileTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 a,b,c
                 d,e,f
                 g,h,i
@@ -27,7 +26,7 @@ public class MainTest {
     @Test
     public void csvFileState_lastLineNoNewLineTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 a,b,c
                 d,e,f
                 g,h,i""";
@@ -38,7 +37,7 @@ public class MainTest {
     @Test
     public void csvFileState_lastLineIncompleteTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 a,b,c
                 d,e,f
                 g,h,""";
@@ -49,7 +48,7 @@ public class MainTest {
     @Test
     public void csvFileState_lastLineMissingColonTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 a,b,c
                 d,e,f
                 g,h""";
@@ -60,7 +59,7 @@ public class MainTest {
     @Test
     public void csvFileState_lastLineOneCharacterTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 a,b,c
                 d,e,f
                 g""";
@@ -71,7 +70,7 @@ public class MainTest {
     @Test
     public void csvFileState_oneLineOkFileTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 a,b,c
                 g,h,i
                 """;
@@ -82,7 +81,7 @@ public class MainTest {
     @Test
     public void csvFileState_oneLineNoNewLineTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 a,b,c
                 g,h,i""";
 
@@ -92,7 +91,7 @@ public class MainTest {
     @Test
     public void csvFileState_oneLineIncompleteTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 a,b,c
                 g,h,""";
 
@@ -102,7 +101,7 @@ public class MainTest {
     @Test
     public void csvFileState_oneLineMissingColonTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 a,b,c
                 g,h""";
 
@@ -112,7 +111,7 @@ public class MainTest {
     @Test
     public void csvFileState_oneLineOneCharacterTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 a,b,c
                 g""";
 
@@ -122,7 +121,7 @@ public class MainTest {
     @Test
     public void csvFileState_headerLineOnlyTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 g,h,i
                 """;
 
@@ -132,7 +131,7 @@ public class MainTest {
     @Test
     public void csvFileState_headerLineNoNewLineTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 g,h,i""";
 
         csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
@@ -141,7 +140,7 @@ public class MainTest {
     @Test
     public void csvFileState_headerLineIncompleteTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 g,h,""";
 
         csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
@@ -150,7 +149,7 @@ public class MainTest {
     @Test
     public void csvFileState_headerLineMissingColonTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 g,h""";
 
         csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
@@ -159,7 +158,7 @@ public class MainTest {
     @Test
     public void csvFileState_headerLineOneCharacterTest() throws IOException {
 
-        String csv = """
+        var csv = """
                 g""";
 
         csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
@@ -168,7 +167,7 @@ public class MainTest {
     @Test
     public void csvFileState_onlyNewLineFileTest() throws IOException {
 
-        String csv = "\n";
+        var csv = "\n";
 
         csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
     }
@@ -176,7 +175,7 @@ public class MainTest {
     @Test
     public void csvFileState_emptyFileTest() throws IOException {
 
-        String csv = "";
+        var csv = "";
 
         csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
     }
@@ -185,9 +184,9 @@ public class MainTest {
 
         Files.writeString(testCsvFilePath, csv);
 
-        SeekableByteChannel byteChannel = Files.newByteChannel(testCsvFilePath);
+        var byteChannel = Files.newByteChannel(testCsvFilePath);
 
-        Main.TrackingCsvState actual = Main.csvFileState(byteChannel);
+        var actual = Main.csvFileState(byteChannel);
 
         Assertions.assertEquals(expected, actual);
     }

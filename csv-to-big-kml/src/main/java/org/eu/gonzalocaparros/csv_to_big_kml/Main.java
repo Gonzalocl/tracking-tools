@@ -8,7 +8,6 @@ import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public class Main {
 
@@ -25,7 +24,7 @@ public class Main {
             return;
         }
 
-        try (Stream<Path> files = Files.list(Path.of(args[0]))) {
+        try (var files = Files.list(Path.of(args[0]))) {
 
             files.filter(f -> f.toString().endsWith(".csv"))
                     .forEach(Main::processCsvFile);
@@ -37,9 +36,9 @@ public class Main {
 
     private static Optional<String> processCsvFile(Path path) {
 
-        try (SeekableByteChannel channel = Files.newByteChannel(path)) {
+        try (var channel = Files.newByteChannel(path)) {
 
-            TrackingCsvState state = csvFileState(channel);
+            var state = csvFileState(channel);
 
             System.out.println(path + " " + state);
         } catch (IOException e) {
@@ -52,16 +51,17 @@ public class Main {
 
     public static TrackingCsvState csvFileState(SeekableByteChannel channel) throws IOException {
 
-        long size = channel.size();
+        var size = channel.size();
 
         if (size == 0) return TrackingCsvState.EMPTY;
 
-        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+        var byteBuffer = ByteBuffer.allocate(1024);
 
-        int readBytes = channel.read(byteBuffer);
+        var readBytes = channel.read(byteBuffer);
         byteBuffer.position(0);
 
-        int newLineFound = 0, i = 0;
+        var i = 0;
+        var newLineFound = 0;
 
         while (i < readBytes && newLineFound < 2) {
             i++;
