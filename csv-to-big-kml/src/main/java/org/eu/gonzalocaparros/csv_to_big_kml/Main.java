@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class Main {
@@ -34,8 +35,19 @@ public class Main {
         }
     }
 
-    private static void processCsvFile(Path path) {
+    private static Optional<String> processCsvFile(Path path) {
 
+        try (SeekableByteChannel channel = Files.newByteChannel(path)) {
+
+            TrackingCsvState state = csvFileState(channel);
+
+            System.out.println(path + " " + state);
+        } catch (IOException e) {
+
+            throw new RuntimeException(e);
+        }
+
+        return Optional.empty();
     }
 
     public static TrackingCsvState csvFileState(SeekableByteChannel channel) throws IOException {
