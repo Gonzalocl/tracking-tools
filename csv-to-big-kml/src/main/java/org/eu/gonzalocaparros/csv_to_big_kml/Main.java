@@ -59,6 +59,7 @@ public class Main {
 
             if (state == TrackingCsvState.OK) {
 
+                channel.position(0);
                 var coordinates = csvFormat.parse(reader).stream()
                         .map(r -> String.format("%s,%s,0", r.get(TrackingCsvHeaders.longitude), r.get(TrackingCsvHeaders.latitude)))
                         .collect(Collectors.joining("\n"));
