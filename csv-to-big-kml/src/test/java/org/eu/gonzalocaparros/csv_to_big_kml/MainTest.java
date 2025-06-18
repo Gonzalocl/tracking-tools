@@ -21,15 +21,17 @@ public class MainTest {
                 g,h,i
                 """;
 
-        Main.TrackingCsvState result = Main.csvFileState(getTestCsvStringAsByteChannel(csv));
-
-        Assertions.assertEquals(Main.TrackingCsvState.OK, result);
+        csvFileStateTest(csv, Main.TrackingCsvState.OK);
     }
 
-    private SeekableByteChannel getTestCsvStringAsByteChannel(String csv) throws IOException {
+    private void csvFileStateTest(String csv, Main.TrackingCsvState expected) throws IOException {
 
         Files.writeString(testCsvFilePath, csv);
 
-        return Files.newByteChannel(testCsvFilePath);
+        SeekableByteChannel byteChannel = Files.newByteChannel(testCsvFilePath);
+
+        Main.TrackingCsvState actual = Main.csvFileState(byteChannel);
+
+        Assertions.assertEquals(expected, actual);
     }
 }
