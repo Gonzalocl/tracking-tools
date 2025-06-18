@@ -57,7 +57,7 @@ public class Main {
             if (byteBuffer.get() == 0x0A) newLineFound++;
         }
 
-        if (readBytes == i || newLineFound < 2) return TrackingCsvState.EMPTY;
+        if (readBytes == i && newLineFound < 2) return TrackingCsvState.EMPTY;
 
         channel.position(size - 1);
         byteBuffer.position(0);
