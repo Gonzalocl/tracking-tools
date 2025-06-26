@@ -96,7 +96,7 @@ public class Main {
     }
 
     private static String getPlacemarkName(Path path) {
-        return path.getFileName().toString().substring(0, 19);
+        return path.getFileName().toString().substring(0, 19) + placemarkNameSuffix;
     }
 
     public static String fixCsvLastLine(String csv) {
