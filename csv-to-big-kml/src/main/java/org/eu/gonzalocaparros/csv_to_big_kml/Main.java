@@ -34,6 +34,7 @@ public class Main {
         try (var files = Files.list(Path.of(args[0]))) {
 
             var placemarks = files.filter(f -> f.toString().endsWith(".csv"))
+                    .sorted()
                     .map(Main::processCsvFile)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
