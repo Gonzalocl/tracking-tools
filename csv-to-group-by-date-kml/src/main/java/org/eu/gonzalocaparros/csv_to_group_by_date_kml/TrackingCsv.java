@@ -2,6 +2,8 @@ package org.eu.gonzalocaparros.csv_to_group_by_date_kml;
 
 import org.apache.commons.csv.CSVFormat;
 
+import java.util.List;
+
 public class TrackingCsv {
 
     private static final CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
@@ -35,6 +37,8 @@ public class TrackingCsv {
 
         return TrackingCsvState.OK;
     }
+
+    record TrackingCsvData(String name, TrackingCsvState originalState, List<Coordinates> coordinates) {}
 
     enum TrackingCsvHeaders {
         latitude, longitude, altitude, accuracy, timestamp
