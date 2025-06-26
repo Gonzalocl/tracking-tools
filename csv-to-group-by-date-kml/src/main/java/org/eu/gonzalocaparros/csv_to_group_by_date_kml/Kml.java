@@ -14,6 +14,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Kml {
 
@@ -94,6 +96,15 @@ public class Kml {
 
     public Node appendChild(Node folder) {
         return kmlDocument.appendChild(folder);
+    }
+
+    public static String formatCoordinates(List<Coordinates> coordinates) {
+
+        try (var stream = coordinates.stream()) {
+
+            return stream.map(c -> String.format("%s,%s,0", c.longitude(), c.latitude()))
+                    .collect(Collectors.joining("\n"));
+        }
     }
 
     public void writeToFile(Path path) {

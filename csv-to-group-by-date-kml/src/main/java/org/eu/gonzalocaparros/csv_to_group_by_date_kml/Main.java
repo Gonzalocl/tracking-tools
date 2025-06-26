@@ -50,19 +50,4 @@ public class Main {
             throw new RuntimeException(e);
         }
     }
-
-    private static String csvToKmlPlacemark(String csv, String placemarkName) {
-
-        try (var reader = new StringReader(csv)) {
-
-            var coordinates = csvFormat.parse(reader).stream()
-                    .map(r -> String.format("%s,%s,0", r.get(TrackingCsvHeaders.longitude), r.get(TrackingCsvHeaders.latitude)))
-                    .collect(Collectors.joining("\n"));
-
-            return String.format(PLACEMARK_TEMPLATE, placemarkName, coordinates);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
