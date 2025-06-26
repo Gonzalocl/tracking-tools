@@ -2,6 +2,8 @@ package org.eu.gonzalocaparros.csv_to_group_by_date_kml;
 
 import org.apache.commons.csv.CSVFormat;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +31,16 @@ public class TrackingCsv {
     }
 
     private static List<Coordinates> parseCoordinates(String csv) {
-        return Collections.emptyList();
+
+        try (var reader = new StringReader(csv);
+             var stream = csvFormat.parse(reader).stream()) {
+
+            return stream.map(r -> new Coordinates(r.get(TrackingCsvHeaders.longitude), r.get(TrackingCsvHeaders.latitude)))
+                    .toList();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String fixCsvLastLine(String csv) {
