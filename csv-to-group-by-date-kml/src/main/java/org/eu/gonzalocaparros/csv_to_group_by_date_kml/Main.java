@@ -5,8 +5,10 @@ import org.apache.commons.csv.CSVFormat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
 
@@ -20,7 +22,35 @@ public class Main {
 
         var inputDirectory = Path.of(args[0]);
 
+        var tracks = parseTracks(inputDirectory);
         var dayLabels = readDayLabels(inputDirectory);
+    }
+
+    private static List<Track> parseTracks(Path inputDirectory) {
+
+        try (var directories = Files.list(inputDirectory)) {
+
+            return directories.filter(Files::isDirectory)
+                    .flatMap(Main::parseTracksDirectory)
+                    .toList();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Stream<Track> parseTracksDirectory(Path path) {
+
+        var label = readTracksDirectoryLabel(path);
+
+        try {
+            var files = Files.list(path);
+            return files.filter(f -> f.toString().endsWith(".csv"))
+                    .map(f -> parseTrack(f, label));
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static String readTracksDirectoryLabel(Path tracksDirectory) {
