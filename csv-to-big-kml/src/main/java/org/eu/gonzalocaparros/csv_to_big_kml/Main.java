@@ -56,7 +56,7 @@ public class Main {
         }
     }
 
-    private static Optional<String> processCsv(Path path, String csv) throws IOException {
+    private static Optional<String> processCsv(Path path, String csv) {
 
         var state = csvState(csv);
 
@@ -78,13 +78,19 @@ public class Main {
         return Optional.empty();
     }
 
-    private static String csvToKmlPlacemark(String csv, String placemarkName) throws IOException {
+    private static String csvToKmlPlacemark(String csv, String placemarkName) {
 
-        var coordinates = csvFormat.parse(new StringReader(csv)).stream()
-                .map(r -> String.format("%s,%s,0", r.get(TrackingCsvHeaders.longitude), r.get(TrackingCsvHeaders.latitude)))
-                .collect(Collectors.joining("\n"));
+        try (var reader = new StringReader(csv)) {
 
-        return String.format(PLACEMARK_TEMPLATE, placemarkName, coordinates);
+            var coordinates = csvFormat.parse(reader).stream()
+                    .map(r -> String.format("%s,%s,0", r.get(TrackingCsvHeaders.longitude), r.get(TrackingCsvHeaders.latitude)))
+                    .collect(Collectors.joining("\n"));
+
+            return String.format(PLACEMARK_TEMPLATE, placemarkName, coordinates);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static String getPlacemarkName(Path path) {
