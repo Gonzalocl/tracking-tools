@@ -73,6 +73,10 @@ public class Kml {
         return folderElement;
     }
 
+    public Node appendChild(Node folder) {
+        return kmlDocument.appendChild(folder);
+    }
+
     public void writeToFile(Path path) {
         try {
             TransformerFactory.newInstance().newTransformer()
