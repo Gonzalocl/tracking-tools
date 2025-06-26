@@ -35,7 +35,7 @@ public class TrackingCsv {
         try (var reader = new StringReader(csv);
              var stream = csvFormat.parse(reader).stream()) {
 
-            return stream.map(r -> new Coordinates(r.get(TrackingCsvHeaders.longitude), r.get(TrackingCsvHeaders.latitude)))
+            return stream.map(r -> new Coordinates(r.get(TrackingCsvHeaders.latitude), r.get(TrackingCsvHeaders.longitude)))
                     .toList();
 
         } catch (IOException e) {
