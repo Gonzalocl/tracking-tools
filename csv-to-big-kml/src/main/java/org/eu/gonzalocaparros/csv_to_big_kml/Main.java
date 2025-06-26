@@ -19,13 +19,17 @@ public class Main {
     private static final String PLACEMARK_TEMPLATE = getResourceAsString("templates/placemark.kml");
     private static final String DOCUMENT_TEMPLATE = getResourceAsString("templates/document.kml");
 
+    private static String placemarkNameSuffix = "";
+
     public static void main(String[] args) {
 
-        if (args.length != 2) {
+        if (args.length != 2 && args.length != 3) {
 
-            System.out.println("Need 2 arguments: input_directory output.kml");
+            System.out.println("Need at least 2 arguments: input_directory output.kml [placemarkNameSuffix]");
             return;
         }
+
+        if (args.length == 3) placemarkNameSuffix = args[2];
 
         try (var files = Files.list(Path.of(args[0]))) {
 
