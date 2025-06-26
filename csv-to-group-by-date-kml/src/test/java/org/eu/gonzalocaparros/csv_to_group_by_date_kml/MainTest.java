@@ -1,4 +1,4 @@
-package org.eu.gonzalocaparros.csv_to_big_kml;
+package org.eu.gonzalocaparros.csv_to_group_by_date_kml;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

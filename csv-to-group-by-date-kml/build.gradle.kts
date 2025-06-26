@@ -26,7 +26,7 @@ tasks.test {
 }
 
 application {
-    mainClass = "org.eu.gonzalocaparros.csv_to_big_kml.Main"
+    mainClass = "org.eu.gonzalocaparros.csv_to_group_by_date_kml.Main"
 }
 
 tasks.jar {

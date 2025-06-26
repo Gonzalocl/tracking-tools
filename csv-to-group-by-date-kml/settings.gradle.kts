@@ -1,1 +1,1 @@
-rootProject.name = "csv-to-big-kml"
+rootProject.name = "csv-to-group-by-date-kml"
