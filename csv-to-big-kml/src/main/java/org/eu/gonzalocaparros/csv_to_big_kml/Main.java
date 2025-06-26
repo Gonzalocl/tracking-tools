@@ -40,7 +40,6 @@ public class Main {
             Files.writeString(Path.of(args[1]), document);
 
         } catch (IOException e) {
-
             throw new RuntimeException(e);
         }
     }
@@ -50,25 +49,30 @@ public class Main {
         try {
             var csv = Files.readString(path);
 
-            var state = csvState(csv);
+            return processCsv(path, csv);
 
-            System.out.println(path + " " + state);
-
-            if (state == TrackingCsvState.LAST_LINE_ERROR) {
-                csv = fixCsvLastLine(csv);
-            }
-
-            if (state != TrackingCsvState.EMPTY) {
-
-                var placemarkName = getPlacemarkName(path);
-
-                var placemark = csvToKmlPlacemark(csv, placemarkName);
-
-                return Optional.of(placemark);
-            }
         } catch (IOException e) {
-
             throw new RuntimeException(e);
+        }
+    }
+
+    private static Optional<String> processCsv(Path path, String csv) throws IOException {
+
+        var state = csvState(csv);
+
+        System.out.println(path + " " + state);
+
+        if (state == TrackingCsvState.LAST_LINE_ERROR) {
+            csv = fixCsvLastLine(csv);
+        }
+
+        if (state != TrackingCsvState.EMPTY) {
+
+            var placemarkName = getPlacemarkName(path);
+
+            var placemark = csvToKmlPlacemark(csv, placemarkName);
+
+            return Optional.of(placemark);
         }
 
         return Optional.empty();
