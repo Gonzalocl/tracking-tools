@@ -9,9 +9,6 @@ import java.util.stream.Collectors;
 
 public class Main {
 
-    private static final String PLACEMARK_TEMPLATE = getResourceAsString("templates/placemark.kml");
-    private static final String DOCUMENT_TEMPLATE = getResourceAsString("templates/document.kml");
-
     private static String placemarkNameSuffix = "";
 
     public static void main(String[] args) {
@@ -92,16 +89,5 @@ public class Main {
     private static String getPlacemarkName(Path path) {
         return path.getFileName().toString().substring(0, 19) + placemarkNameSuffix;
     }
-
-    private static String getResourceAsString(String resourceName) {
-
-        try (var resourceAsStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {
-            return new String(resourceAsStream.readAllBytes());
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
 }
