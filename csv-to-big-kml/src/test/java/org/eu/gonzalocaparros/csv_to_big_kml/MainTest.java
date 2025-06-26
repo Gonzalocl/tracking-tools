@@ -180,4 +180,75 @@ public class MainTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
+    @Test
+    public void fixCsvLastLine_lastLineNoNewLineTest() {
+
+        var csv = """
+                a,b,c
+                d,e,f
+                g,h,i""";
+
+        var expected = """
+                a,b,c
+                d,e,f
+                """;
+
+        fixCsvLastLineTest(csv, expected);
+    }
+
+    @Test
+    public void fixCsvLastLine_lastLineIncompleteTest() {
+
+        var csv = """
+                a,b,c
+                d,e,f
+                g,h,""";
+
+        var expected = """
+                a,b,c
+                d,e,f
+                """;
+
+        fixCsvLastLineTest(csv, expected);
+    }
+
+    @Test
+    public void fixCsvLastLine_lastLineMissingColonTest() {
+
+        var csv = """
+                a,b,c
+                d,e,f
+                g,h""";
+
+        var expected = """
+                a,b,c
+                d,e,f
+                """;
+
+        fixCsvLastLineTest(csv, expected);
+    }
+
+    @Test
+    public void fixCsvLastLine_lastLineOneCharacterTest() {
+
+        var csv = """
+                a,b,c
+                d,e,f
+                g""";
+
+        var expected = """
+                a,b,c
+                d,e,f
+                """;
+
+        fixCsvLastLineTest(csv, expected);
+    }
+
+    private void fixCsvLastLineTest(String csv, String expected) {
+
+        var actual = Main.fixCsvLastLine(csv);
+
+        Assertions.assertEquals(expected, actual);
+    }
 }

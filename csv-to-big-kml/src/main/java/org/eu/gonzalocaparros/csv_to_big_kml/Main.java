@@ -97,7 +97,7 @@ public class Main {
         return path.getFileName().toString().substring(0, 19);
     }
 
-    private static String fixCsvLastLine(String csv) {
+    public static String fixCsvLastLine(String csv) {
 
         int lastNewLine = csv.lastIndexOf("\n");
 
