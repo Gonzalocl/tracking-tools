@@ -23,6 +23,22 @@ public class Main {
         var dayLabels = readDayLabels(inputDirectory);
     }
 
+    private static String readTracksDirectoryLabel(Path tracksDirectory) {
+        try (var lines = Files.lines(tracksDirectory.resolve("properties"))) {
+            return lines.findFirst().orElseThrow();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Track parseTrack(Path path, String label) {
+
+        var date = path.getFileName().toString().substring(0, 10);
+        var track = TrackingCsv.processTrackingCsv(path);
+
+        return new Track(date, label, track);
+    }
+
     private static Map<String, String> readDayLabels(Path inputDirectory) {
 
         try (var reader = Files.newBufferedReader(inputDirectory.resolve("day_labels.csv"));
@@ -33,4 +49,6 @@ public class Main {
             throw new RuntimeException(e);
         }
     }
+
+    record Track(String date, String label, TrackingCsv.TrackingCsvData track) {}
 }
