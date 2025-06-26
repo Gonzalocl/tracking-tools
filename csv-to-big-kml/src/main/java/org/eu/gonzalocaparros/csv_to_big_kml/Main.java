@@ -98,7 +98,10 @@ public class Main {
     }
 
     private static String fixCsvLastLine(String csv) {
-        return "";
+
+        int lastNewLine = csv.lastIndexOf("\n");
+
+        return csv.substring(0, lastNewLine + 1);
     }
 
     public static TrackingCsvState csvState(String csv) {
