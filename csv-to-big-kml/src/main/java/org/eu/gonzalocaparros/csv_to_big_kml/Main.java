@@ -50,7 +50,7 @@ public class Main {
         try {
             var csv = Files.readString(path);
 
-            var state = csvState("");
+            var state = csvState(csv);
 
             System.out.println(path + " " + state);
 
