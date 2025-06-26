@@ -60,11 +60,11 @@ public class Main {
 
             if (state != TrackingCsvState.EMPTY) {
 
+                var placemarkName = getPlacemarkName(path);
+
                 var coordinates = csvFormat.parse(new StringReader(csv)).stream()
                         .map(r -> String.format("%s,%s,0", r.get(TrackingCsvHeaders.longitude), r.get(TrackingCsvHeaders.latitude)))
                         .collect(Collectors.joining("\n"));
-
-                var placemarkName = path.getFileName().toString().substring(0, 19);
 
                 var placemark = String.format(PLACEMARK_TEMPLATE, placemarkName, coordinates);
 
@@ -76,6 +76,10 @@ public class Main {
         }
 
         return Optional.empty();
+    }
+
+    private static String getPlacemarkName(Path path) {
+        return path.getFileName().toString().substring(0, 19);
     }
 
     private static String fixCsvLastLine(String csv) {
