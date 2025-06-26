@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class MainTest {
@@ -180,13 +179,9 @@ public class MainTest {
         csvFileStateTest(csv, Main.TrackingCsvState.EMPTY);
     }
 
-    private void csvFileStateTest(String csv, Main.TrackingCsvState expected) throws IOException {
+    private void csvFileStateTest(String csv, Main.TrackingCsvState expected) {
 
-        Files.writeString(testCsvFilePath, csv);
-
-        var byteChannel = Files.newByteChannel(testCsvFilePath);
-
-        var actual = Main.csvFileState(byteChannel);
+        var actual = Main.csvState(csv);
 
         Assertions.assertEquals(expected, actual);
     }

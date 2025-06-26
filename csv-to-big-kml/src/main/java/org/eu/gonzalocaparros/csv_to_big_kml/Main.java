@@ -3,9 +3,7 @@ package org.eu.gonzalocaparros.csv_to_big_kml;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
-import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,7 +51,7 @@ public class Main {
         try (var channel = Files.newByteChannel(path);
              var reader = Channels.newReader(channel, Charset.defaultCharset())) {
 
-            var state = csvFileState(channel);
+            var state = csvState("");
 
             System.out.println(path + " " + state);
 
@@ -78,37 +76,24 @@ public class Main {
         return Optional.empty();
     }
 
-    public static TrackingCsvState csvFileState(SeekableByteChannel channel) throws IOException {
+    public static TrackingCsvState csvState(String csv) {
 
-        var size = channel.size();
-
-        if (size == 0) return TrackingCsvState.EMPTY;
-
-        var byteBuffer = ByteBuffer.allocate(1024);
-
-        var readBytes = channel.read(byteBuffer);
-        byteBuffer.position(0);
-
+        var length = csv.length();
         var i = 0;
         var newLineFound = 0;
 
-        while (i < readBytes && newLineFound < 2) {
-            i++;
+        while (i < length && newLineFound < 2) {
 
-            if (byteBuffer.get() == 0x0A) newLineFound++;
+            if (csv.charAt(i) == 0x0A) newLineFound++;
+
+            i++;
         }
 
-        if (readBytes == i && newLineFound < 2) return TrackingCsvState.EMPTY;
+        if (i == length && newLineFound < 2) return TrackingCsvState.EMPTY;
 
-        channel.position(size - 1);
-        byteBuffer.position(0);
-        readBytes = channel.read(byteBuffer);
+        if (csv.charAt(length - 1) != 0x0A) return TrackingCsvState.LAST_LINE_ERROR;
 
-        if (readBytes != 1) throw new RuntimeException();
-
-        if (byteBuffer.get(0) == 0x0A) return TrackingCsvState.OK;
-
-        return TrackingCsvState.LAST_LINE_ERROR;
+        return TrackingCsvState.OK;
     }
 
     private static String getResourceAsString(String resourceName) {
