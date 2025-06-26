@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,6 +25,8 @@ public class Main {
 
         var tracks = parseTracks(inputDirectory);
         var dayLabels = readDayLabels(inputDirectory);
+
+        buildKmlDocument(tracks, dayLabels, Path.of(args[1]));
     }
 
     private static Collection<Track> parseTracks(Path inputDirectory) {
@@ -77,6 +80,18 @@ public class Main {
             return stream.collect(Collectors.toMap(r -> r.get(0), r -> r.get(1)));
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static void buildKmlDocument(Collection<Track> tracks, Map<String, String> dayLabels, Path outputFile) {
+
+        var groupedTracks = groupTracks(tracks);
+
+    }
+
+    private static Map<String, Map<String, List<Track>>> groupTracks(Collection<Track> tracks) {
+        try (var stream = tracks.stream()) {
+            return stream.collect(Collectors.groupingBy(Track::date, Collectors.groupingBy(Track::label)));
         }
     }
 
