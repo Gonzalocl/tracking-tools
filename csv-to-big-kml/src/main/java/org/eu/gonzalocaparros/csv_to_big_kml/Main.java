@@ -3,8 +3,7 @@ package org.eu.gonzalocaparros.csv_to_big_kml;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
-import java.nio.channels.Channels;
-import java.nio.charset.Charset;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -48,17 +47,20 @@ public class Main {
 
     private static Optional<String> processCsvFile(Path path) {
 
-        try (var channel = Files.newByteChannel(path);
-             var reader = Channels.newReader(channel, Charset.defaultCharset())) {
+        try {
+            var csv = Files.readString(path);
 
             var state = csvState("");
 
             System.out.println(path + " " + state);
 
-            if (state == TrackingCsvState.OK) {
+            if (state == TrackingCsvState.LAST_LINE_ERROR) {
+                csv = fixCsvLastLine(csv);
+            }
 
-                channel.position(0);
-                var coordinates = csvFormat.parse(reader).stream()
+            if (state != TrackingCsvState.EMPTY) {
+
+                var coordinates = csvFormat.parse(new StringReader(csv)).stream()
                         .map(r -> String.format("%s,%s,0", r.get(TrackingCsvHeaders.longitude), r.get(TrackingCsvHeaders.latitude)))
                         .collect(Collectors.joining("\n"));
 
@@ -74,6 +76,10 @@ public class Main {
         }
 
         return Optional.empty();
+    }
+
+    private static String fixCsvLastLine(String csv) {
+        return "";
     }
 
     public static TrackingCsvState csvState(String csv) {
