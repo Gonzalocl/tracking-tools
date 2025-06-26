@@ -62,9 +62,7 @@ public class Main {
 
         System.out.println(path + " " + state);
 
-        if (state == TrackingCsvState.LAST_LINE_ERROR) {
-            csv = fixCsvLastLine(csv);
-        }
+        if (state == TrackingCsvState.LAST_LINE_ERROR) csv = fixCsvLastLine(csv);
 
         if (state != TrackingCsvState.EMPTY) {
 
