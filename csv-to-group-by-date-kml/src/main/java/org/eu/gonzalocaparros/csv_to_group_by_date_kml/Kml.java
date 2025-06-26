@@ -73,6 +73,25 @@ public class Kml {
         return folderElement;
     }
 
+    public Node newLineStringPlacemark(String name, String styleId, String coordinates) {
+        var placemarkElement = xmlDocument.createElement("Placemark");
+        var nameElement = xmlDocument.createElement("name");
+        var styleUrlElement = xmlDocument.createElement("styleUrl");
+        var lineStringElement = xmlDocument.createElement("LineString");
+        var coordinatesElement = xmlDocument.createElement("coordinates");
+
+        nameElement.setTextContent(name);
+        styleUrlElement.setTextContent("#" + styleId);
+        coordinatesElement.setTextContent(coordinates);
+
+        placemarkElement.appendChild(nameElement);
+        placemarkElement.appendChild(styleUrlElement);
+        placemarkElement.appendChild(lineStringElement)
+                .appendChild(coordinatesElement);
+
+        return placemarkElement;
+    }
+
     public Node appendChild(Node folder) {
         return kmlDocument.appendChild(folder);
     }
