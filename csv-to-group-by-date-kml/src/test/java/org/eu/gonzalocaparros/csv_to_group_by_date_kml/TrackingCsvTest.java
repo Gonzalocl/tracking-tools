@@ -3,7 +3,7 @@ package org.eu.gonzalocaparros.csv_to_group_by_date_kml;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class MainTest {
+public class TrackingCsvTest {
 
     @Test
     public void csvState_okFileTest() {
