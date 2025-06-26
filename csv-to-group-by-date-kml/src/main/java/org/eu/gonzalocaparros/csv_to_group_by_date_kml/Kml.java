@@ -38,9 +38,9 @@ public class Kml {
 
         nameElement.setTextContent(name);
 
-        xmlDocument.appendChild(kmlElement);
-        kmlElement.appendChild(kmlDocument);
-        kmlDocument.appendChild(nameElement);
+        xmlDocument.appendChild(kmlElement)
+                .appendChild(kmlDocument)
+                .appendChild(nameElement);
 
         return new Kml(xmlDocument, kmlDocument);
     }
