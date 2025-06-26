@@ -5,7 +5,7 @@ import org.apache.commons.csv.CSVFormat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,7 +26,7 @@ public class Main {
         var dayLabels = readDayLabels(inputDirectory);
     }
 
-    private static List<Track> parseTracks(Path inputDirectory) {
+    private static Collection<Track> parseTracks(Path inputDirectory) {
 
         try (var directories = Files.list(inputDirectory)) {
 
