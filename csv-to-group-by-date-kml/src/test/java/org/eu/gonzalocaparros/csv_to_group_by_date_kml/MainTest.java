@@ -14,7 +14,7 @@ public class MainTest {
                 g,h,i
                 """;
 
-        csvStateTest(csv, Main.TrackingCsvState.OK);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.OK);
     }
 
     @Test
@@ -25,7 +25,7 @@ public class MainTest {
                 d,e,f
                 g,h,i""";
 
-        csvStateTest(csv, Main.TrackingCsvState.LAST_LINE_ERROR);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.LAST_LINE_ERROR);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class MainTest {
                 d,e,f
                 g,h,""";
 
-        csvStateTest(csv, Main.TrackingCsvState.LAST_LINE_ERROR);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.LAST_LINE_ERROR);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class MainTest {
                 d,e,f
                 g,h""";
 
-        csvStateTest(csv, Main.TrackingCsvState.LAST_LINE_ERROR);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.LAST_LINE_ERROR);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class MainTest {
                 d,e,f
                 g""";
 
-        csvStateTest(csv, Main.TrackingCsvState.LAST_LINE_ERROR);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.LAST_LINE_ERROR);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class MainTest {
                 g,h,i
                 """;
 
-        csvStateTest(csv, Main.TrackingCsvState.OK);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.OK);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class MainTest {
                 a,b,c
                 g,h,i""";
 
-        csvStateTest(csv, Main.TrackingCsvState.EMPTY);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.EMPTY);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class MainTest {
                 a,b,c
                 g,h,""";
 
-        csvStateTest(csv, Main.TrackingCsvState.EMPTY);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.EMPTY);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class MainTest {
                 a,b,c
                 g,h""";
 
-        csvStateTest(csv, Main.TrackingCsvState.EMPTY);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.EMPTY);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class MainTest {
                 a,b,c
                 g""";
 
-        csvStateTest(csv, Main.TrackingCsvState.EMPTY);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.EMPTY);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class MainTest {
                 g,h,i
                 """;
 
-        csvStateTest(csv, Main.TrackingCsvState.EMPTY);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.EMPTY);
     }
 
     @Test
@@ -128,7 +128,7 @@ public class MainTest {
         var csv = """
                 g,h,i""";
 
-        csvStateTest(csv, Main.TrackingCsvState.EMPTY);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.EMPTY);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class MainTest {
         var csv = """
                 g,h,""";
 
-        csvStateTest(csv, Main.TrackingCsvState.EMPTY);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.EMPTY);
     }
 
     @Test
@@ -146,7 +146,7 @@ public class MainTest {
         var csv = """
                 g,h""";
 
-        csvStateTest(csv, Main.TrackingCsvState.EMPTY);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.EMPTY);
     }
 
     @Test
@@ -155,7 +155,7 @@ public class MainTest {
         var csv = """
                 g""";
 
-        csvStateTest(csv, Main.TrackingCsvState.EMPTY);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.EMPTY);
     }
 
     @Test
@@ -163,7 +163,7 @@ public class MainTest {
 
         var csv = "\n";
 
-        csvStateTest(csv, Main.TrackingCsvState.EMPTY);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.EMPTY);
     }
 
     @Test
@@ -171,12 +171,12 @@ public class MainTest {
 
         var csv = "";
 
-        csvStateTest(csv, Main.TrackingCsvState.EMPTY);
+        csvStateTest(csv, TrackingCsv.TrackingCsvState.EMPTY);
     }
 
-    private void csvStateTest(String csv, Main.TrackingCsvState expected) {
+    private void csvStateTest(String csv, TrackingCsv.TrackingCsvState expected) {
 
-        var actual = Main.csvState(csv);
+        var actual = TrackingCsv.csvState(csv);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -247,7 +247,7 @@ public class MainTest {
 
     private void fixCsvLastLineTest(String csv, String expected) {
 
-        var actual = Main.fixCsvLastLine(csv);
+        var actual = TrackingCsv.fixCsvLastLine(csv);
 
         Assertions.assertEquals(expected, actual);
     }
