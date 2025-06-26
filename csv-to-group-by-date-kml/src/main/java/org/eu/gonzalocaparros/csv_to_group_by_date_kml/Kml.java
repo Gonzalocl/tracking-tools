@@ -94,6 +94,12 @@ public class Kml {
         return placemarkElement;
     }
 
+    public Node newLineStringPlacemark(String name, String styleId, List<Coordinates> coordinates) {
+
+        var coordinatesString = formatCoordinates(coordinates);
+        return newLineStringPlacemark(name, styleId, coordinatesString);
+    }
+
     public Node appendChild(Node folder) {
         return kmlDocument.appendChild(folder);
     }
