@@ -51,26 +51,6 @@ public class Main {
         }
     }
 
-    private static Optional<String> processCsv(Path path, String csv) {
-
-        var state = csvState(csv);
-
-        System.out.println(path + " " + state);
-
-        if (state == TrackingCsvState.LAST_LINE_ERROR) csv = fixCsvLastLine(csv);
-
-        if (state != TrackingCsvState.EMPTY) {
-
-            var placemarkName = getPlacemarkName(path);
-
-            var placemark = csvToKmlPlacemark(csv, placemarkName);
-
-            return Optional.of(placemark);
-        }
-
-        return Optional.empty();
-    }
-
     private static String csvToKmlPlacemark(String csv, String placemarkName) {
 
         try (var reader = new StringReader(csv)) {
@@ -85,9 +65,4 @@ public class Main {
             throw new RuntimeException(e);
         }
     }
-
-    private static String getPlacemarkName(Path path) {
-        return path.getFileName().toString().substring(0, 19) + placemarkNameSuffix;
-    }
-
 }

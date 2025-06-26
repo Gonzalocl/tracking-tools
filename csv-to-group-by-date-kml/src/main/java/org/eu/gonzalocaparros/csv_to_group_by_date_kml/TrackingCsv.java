@@ -2,6 +2,8 @@ package org.eu.gonzalocaparros.csv_to_group_by_date_kml;
 
 import org.apache.commons.csv.CSVFormat;
 
+import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 public class TrackingCsv {
@@ -10,6 +12,25 @@ public class TrackingCsv {
             .setSkipHeaderRecord(true)
             .setHeader(TrackingCsvHeaders.class)
             .build();
+
+    public static TrackingCsvData fixAndParseTrackingCsv(Path path, String csv) {
+
+        var name = path.getFileName().toString().substring(0, 19);
+
+        var state = csvState(csv);
+
+        if (state == TrackingCsvState.EMPTY) return new TrackingCsvData(name, state, Collections.emptyList());
+
+        if (state == TrackingCsvState.LAST_LINE_ERROR) csv = fixCsvLastLine(csv);
+
+        var coordinates = parseCoordinates(csv);
+
+        return new TrackingCsvData(name, state, coordinates);
+    }
+
+    private static List<Coordinates> parseCoordinates(String csv) {
+        return Collections.emptyList();
+    }
 
     public static String fixCsvLastLine(String csv) {
 
