@@ -11,7 +11,7 @@ public class TrackingCsv {
 
     public static String fixCsvLastLine(String csv) {
 
-        int lastNewLine = csv.lastIndexOf("\n");
+        var lastNewLine = csv.lastIndexOf("\n");
 
         return csv.substring(0, lastNewLine + 1);
     }
