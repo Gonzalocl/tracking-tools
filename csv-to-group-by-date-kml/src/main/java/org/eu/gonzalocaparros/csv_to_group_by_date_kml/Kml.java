@@ -2,6 +2,7 @@ package org.eu.gonzalocaparros.csv_to_group_by_date_kml;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -43,6 +44,33 @@ public class Kml {
                 .appendChild(nameElement);
 
         return new Kml(xmlDocument, kmlDocument);
+    }
+
+    public void addStyle(String id, String color, int width) {
+        var styleElement = xmlDocument.createElement("Style");
+        var lineStyleElement = xmlDocument.createElement("LineStyle");
+        var colorElement = xmlDocument.createElement("color");
+        var widthElement = xmlDocument.createElement("width");
+
+        styleElement.setAttribute("id", id);
+        colorElement.setTextContent(color);
+        widthElement.setTextContent(Integer.toString(width));
+
+        kmlDocument.appendChild(styleElement)
+                .appendChild(lineStyleElement);
+        lineStyleElement.appendChild(colorElement);
+        lineStyleElement.appendChild(widthElement);
+    }
+
+    public Node newFolder(String name) {
+        var folderElement = xmlDocument.createElement("Folder");
+        var nameElement = xmlDocument.createElement("name");
+
+        nameElement.setTextContent(name);
+
+        folderElement.appendChild(nameElement);
+
+        return folderElement;
     }
 
     public void writeToFile(Path path) {
