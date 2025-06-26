@@ -1,7 +1,5 @@
 package org.eu.gonzalocaparros.csv_to_group_by_date_kml;
 
-import org.apache.commons.csv.CSVFormat;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
@@ -10,11 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Main {
-
-    private static final CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
-            .setSkipHeaderRecord(true)
-            .setHeader(TrackingCsvHeaders.class)
-            .build();
 
     private static final String PLACEMARK_TEMPLATE = getResourceAsString("templates/placemark.kml");
     private static final String DOCUMENT_TEMPLATE = getResourceAsString("templates/document.kml");
@@ -100,33 +93,6 @@ public class Main {
         return path.getFileName().toString().substring(0, 19) + placemarkNameSuffix;
     }
 
-    public static String fixCsvLastLine(String csv) {
-
-        int lastNewLine = csv.lastIndexOf("\n");
-
-        return csv.substring(0, lastNewLine + 1);
-    }
-
-    public static TrackingCsvState csvState(String csv) {
-
-        var length = csv.length();
-        var i = 0;
-        var newLineFound = 0;
-
-        while (i < length && newLineFound < 2) {
-
-            if (csv.charAt(i) == 0x0A) newLineFound++;
-
-            i++;
-        }
-
-        if (i == length && newLineFound < 2) return TrackingCsvState.EMPTY;
-
-        if (csv.charAt(length - 1) != 0x0A) return TrackingCsvState.LAST_LINE_ERROR;
-
-        return TrackingCsvState.OK;
-    }
-
     private static String getResourceAsString(String resourceName) {
 
         try (var resourceAsStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {
@@ -137,12 +103,5 @@ public class Main {
         }
     }
 
-    enum TrackingCsvHeaders {
-        latitude, longitude, altitude, accuracy, timestamp
-    }
-
-    enum TrackingCsvState {
-        OK, EMPTY, LAST_LINE_ERROR
-    }
 
 }
