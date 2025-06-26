@@ -4,6 +4,7 @@ import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +15,15 @@ public class TrackingCsv {
             .setSkipHeaderRecord(true)
             .setHeader(TrackingCsvHeaders.class)
             .build();
+
+    public static TrackingCsvData processTrackingCsv(Path path) {
+        try {
+            var csv = Files.readString(path);
+            return fixAndParseTrackingCsv(path, csv);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static TrackingCsvData fixAndParseTrackingCsv(Path path, String csv) {
 
