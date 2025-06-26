@@ -62,11 +62,7 @@ public class Main {
 
                 var placemarkName = getPlacemarkName(path);
 
-                var coordinates = csvFormat.parse(new StringReader(csv)).stream()
-                        .map(r -> String.format("%s,%s,0", r.get(TrackingCsvHeaders.longitude), r.get(TrackingCsvHeaders.latitude)))
-                        .collect(Collectors.joining("\n"));
-
-                var placemark = String.format(PLACEMARK_TEMPLATE, placemarkName, coordinates);
+                var placemark = csvToKmlPlacemark(csv, placemarkName);
 
                 return Optional.of(placemark);
             }
@@ -76,6 +72,15 @@ public class Main {
         }
 
         return Optional.empty();
+    }
+
+    private static String csvToKmlPlacemark(String csv, String placemarkName) throws IOException {
+
+        var coordinates = csvFormat.parse(new StringReader(csv)).stream()
+                .map(r -> String.format("%s,%s,0", r.get(TrackingCsvHeaders.longitude), r.get(TrackingCsvHeaders.latitude)))
+                .collect(Collectors.joining("\n"));
+
+        return String.format(PLACEMARK_TEMPLATE, placemarkName, coordinates);
     }
 
     private static String getPlacemarkName(Path path) {
