@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -125,7 +126,7 @@ public class Main {
         var properties = addStyles(labelProperties, kml);
 
         try (var stream = groupedTracks.entrySet().stream()) {
-            stream
+            stream.sorted(Map.Entry.comparingByKey())
                     .map(d -> buildDayFolder(d.getKey(), d.getValue(), dayLabels.getOrDefault(d.getKey(), ""), properties, kml))
                     .forEach(kml::appendChild);
         }
@@ -156,7 +157,7 @@ public class Main {
         var dayFolder = kml.newFolder(day + (dayLabel.isEmpty() ? "" : " - " + dayLabel));
 
         try (var stream = dayTracks.entrySet().stream()) {
-            stream
+            stream.sorted(Comparator.comparing(l -> properties.get(l.getKey()).order()))
                     .map(l -> buildLabelFolder(l.getKey(), l.getValue(), properties.get(l.getKey()).styleId(), kml))
                     .forEach(dayFolder::appendChild);
         }
@@ -169,7 +170,7 @@ public class Main {
         var labelFolder = kml.newFolder(label);
 
         try (var stream = labelTracks.stream()) {
-            stream
+            stream.sorted(Comparator.comparing(t -> t.track().name()))
                     .map(t -> kml.newLineStringPlacemark(t.track().name(), styleId, t.track().coordinates()))
                     .forEach(labelFolder::appendChild);
         }
