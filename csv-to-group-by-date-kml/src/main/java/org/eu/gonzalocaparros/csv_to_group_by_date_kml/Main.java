@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,7 +29,7 @@ public class Main {
         var dayLabels = readDayLabels(inputDirectory);
         var labelProperties = readLabelProperties(inputDirectory);
 
-        buildKmlDocument(tracks, dayLabels, Path.of(args[1]));
+        buildKmlDocument(tracks, dayLabels, labelProperties, Path.of(args[1]));
     }
 
     private static Collection<Track> parseTracks(Path inputDirectory) {
@@ -115,11 +116,13 @@ public class Main {
         }
     }
 
-    private static void buildKmlDocument(Collection<Track> tracks, Map<String, String> dayLabels, Path outputFile) {
+    private static void buildKmlDocument(Collection<Track> tracks, Map<String, String> dayLabels, Collection<LabelProperties> labelProperties, Path outputFile) {
 
         var groupedTracks = removeEmptyAndGroupTracks(tracks);
 
         var kml = Kml.newDocument("Tracking");
+
+        var properties = addStyles(labelProperties, kml);
 
         try (var stream = groupedTracks.entrySet().stream()) {
             stream
@@ -128,6 +131,24 @@ public class Main {
         }
 
         kml.writeToFile(outputFile);
+    }
+
+    private static Map<String, Properties> addStyles(Collection<LabelProperties> labelProperties, Kml kml) {
+
+        try (var stream = labelProperties.stream()) {
+
+            return stream.map(lp -> addStyle(lp, kml))
+                    .collect(Collectors.toMap(Properties::label, Function.identity()));
+        }
+    }
+
+    private static Properties addStyle(LabelProperties labelProperties, Kml kml) {
+
+        var styleId = "style_" + labelProperties.color();
+
+        kml.addStyle(styleId, labelProperties.color(), 2);
+
+        return new Properties(labelProperties.label(), styleId, labelProperties.order());
     }
 
     private static Node buildDayFolder(String day, Map<String, List<Track>> dayTracks, String dayLabel, Kml kml) {
@@ -166,4 +187,6 @@ public class Main {
     record Track(String date, String label, TrackingCsv.TrackingCsvData track) {}
 
     record LabelProperties(String label, String color, int order) {}
+
+    record Properties(String label, String styleId, int order) {}
 }
