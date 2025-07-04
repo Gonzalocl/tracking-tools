@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,6 +27,7 @@ public class Main {
 
         var tracks = parseTracks(inputDirectory);
         var dayLabels = readDayLabels(inputDirectory);
+        var labelProperties = readLabelProperties(inputDirectory);
 
         buildKmlDocument(tracks, dayLabels, Path.of(args[1]));
     }
@@ -84,6 +86,36 @@ public class Main {
         }
     }
 
+    private static Map<String, Properties> readLabelProperties(Path inputDirectory) {
+
+        try (var directories = Files.list(inputDirectory)) {
+
+            return directories.filter(Files::isDirectory)
+                    .map(Main::readProperties)
+                    .collect(Collectors.toMap(Properties::label, Function.identity()));
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Properties readProperties(Path tracksDirectory) {
+
+        try (var lines = Files.lines(tracksDirectory.resolve("properties"))) {
+
+            List<String> list = lines.toList();
+
+            if (list.size() < 3) {
+                throw new RuntimeException("Invalid label properties");
+            }
+
+            return new Properties(list.get(0), list.get(1), Integer.parseInt(list.get(2)));
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static void buildKmlDocument(Collection<Track> tracks, Map<String, String> dayLabels, Path outputFile) {
 
         var groupedTracks = removeEmptyAndGroupTracks(tracks);
@@ -134,4 +166,6 @@ public class Main {
     }
 
     record Track(String date, String label, TrackingCsv.TrackingCsvData track) {}
+
+    record Properties(String label, String color, int order) {}
 }
