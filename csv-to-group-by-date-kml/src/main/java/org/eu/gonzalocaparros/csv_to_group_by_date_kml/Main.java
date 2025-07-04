@@ -1,6 +1,7 @@
 package org.eu.gonzalocaparros.csv_to_group_by_date_kml;
 
 import org.apache.commons.csv.CSVFormat;
+import org.w3c.dom.Node;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -86,6 +87,43 @@ public class Main {
     private static void buildKmlDocument(Collection<Track> tracks, Map<String, String> dayLabels, Path outputFile) {
 
         var groupedTracks = removeEmptyAndGroupTracks(tracks);
+
+
+        var kml = Kml.newDocument("Tracking");
+
+        try (var stream = groupedTracks.entrySet().stream()) {
+            stream
+                    .map(d -> buildDayFolder(d.getKey(), d.getValue(), dayLabels.getOrDefault(d.getKey(), ""), kml))
+                    .forEach(kml::appendChild);
+        }
+
+        kml.writeToFile(outputFile);
+    }
+
+    private static Node buildDayFolder(String day, Map<String, List<Track>> dayTracks, String dayLabel, Kml kml) {
+
+        var dayFolder = kml.newFolder(day + (dayLabel.isEmpty() ? "" : " - " + dayLabel));
+
+        try (var stream = dayTracks.entrySet().stream()) {
+            stream
+                    .map(l -> buildLabelFolder(l.getKey(), l.getValue(), kml))
+                    .forEach(dayFolder::appendChild);
+        }
+
+        return dayFolder;
+    }
+
+    private static Node buildLabelFolder(String label, List<Track> labelTracks, Kml kml) {
+
+        var labelFolder = kml.newFolder(label);
+
+        try (var stream = labelTracks.stream()) {
+            stream
+                    .map(t -> kml.newLineStringPlacemark(t.track().name(), "", t.track().coordinates()))
+                    .forEach(labelFolder::appendChild);
+        }
+
+        return labelFolder;
     }
 
     private static Map<String, Map<String, List<Track>>> removeEmptyAndGroupTracks(Collection<Track> tracks) {
