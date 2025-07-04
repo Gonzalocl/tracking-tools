@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -86,13 +85,13 @@ public class Main {
         }
     }
 
-    private static Map<String, LabelProperties> readLabelProperties(Path inputDirectory) {
+    private static Collection<LabelProperties> readLabelProperties(Path inputDirectory) {
 
         try (var directories = Files.list(inputDirectory)) {
 
             return directories.filter(Files::isDirectory)
                     .map(Main::readProperties)
-                    .collect(Collectors.toMap(LabelProperties::label, Function.identity()));
+                    .toList();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -119,7 +118,6 @@ public class Main {
     private static void buildKmlDocument(Collection<Track> tracks, Map<String, String> dayLabels, Path outputFile) {
 
         var groupedTracks = removeEmptyAndGroupTracks(tracks);
-
 
         var kml = Kml.newDocument("Tracking");
 
