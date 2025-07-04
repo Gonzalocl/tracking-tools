@@ -78,15 +78,18 @@ public class Kml {
     public Node newLineStringPlacemark(String name, String styleId, String coordinates) {
         var placemarkElement = xmlDocument.createElement("Placemark");
         var nameElement = xmlDocument.createElement("name");
+        var visibilityElement = xmlDocument.createElement("visibility");
         var styleUrlElement = xmlDocument.createElement("styleUrl");
         var lineStringElement = xmlDocument.createElement("LineString");
         var coordinatesElement = xmlDocument.createElement("coordinates");
 
         nameElement.setTextContent(name);
+        visibilityElement.setTextContent("0");
         styleUrlElement.setTextContent("#" + styleId);
         coordinatesElement.setTextContent(coordinates);
 
         placemarkElement.appendChild(nameElement);
+        placemarkElement.appendChild(visibilityElement);
         placemarkElement.appendChild(styleUrlElement);
         placemarkElement.appendChild(lineStringElement)
                 .appendChild(coordinatesElement);
