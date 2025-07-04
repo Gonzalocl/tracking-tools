@@ -126,7 +126,7 @@ public class Main {
 
         try (var stream = groupedTracks.entrySet().stream()) {
             stream
-                    .map(d -> buildDayFolder(d.getKey(), d.getValue(), dayLabels.getOrDefault(d.getKey(), ""), kml))
+                    .map(d -> buildDayFolder(d.getKey(), d.getValue(), dayLabels.getOrDefault(d.getKey(), ""), properties, kml))
                     .forEach(kml::appendChild);
         }
 
@@ -151,26 +151,26 @@ public class Main {
         return new Properties(labelProperties.label(), styleId, labelProperties.order());
     }
 
-    private static Node buildDayFolder(String day, Map<String, List<Track>> dayTracks, String dayLabel, Kml kml) {
+    private static Node buildDayFolder(String day, Map<String, List<Track>> dayTracks, String dayLabel, Map<String, Properties> properties, Kml kml) {
 
         var dayFolder = kml.newFolder(day + (dayLabel.isEmpty() ? "" : " - " + dayLabel));
 
         try (var stream = dayTracks.entrySet().stream()) {
             stream
-                    .map(l -> buildLabelFolder(l.getKey(), l.getValue(), kml))
+                    .map(l -> buildLabelFolder(l.getKey(), l.getValue(), properties.get(l.getKey()).styleId(), kml))
                     .forEach(dayFolder::appendChild);
         }
 
         return dayFolder;
     }
 
-    private static Node buildLabelFolder(String label, List<Track> labelTracks, Kml kml) {
+    private static Node buildLabelFolder(String label, List<Track> labelTracks, String styleId, Kml kml) {
 
         var labelFolder = kml.newFolder(label);
 
         try (var stream = labelTracks.stream()) {
             stream
-                    .map(t -> kml.newLineStringPlacemark(t.track().name(), "", t.track().coordinates()))
+                    .map(t -> kml.newLineStringPlacemark(t.track().name(), styleId, t.track().coordinates()))
                     .forEach(labelFolder::appendChild);
         }
 
