@@ -85,13 +85,13 @@ public class Main {
 
     private static void buildKmlDocument(Collection<Track> tracks, Map<String, String> dayLabels, Path outputFile) {
 
-        var groupedTracks = groupTracks(tracks);
-
+        var groupedTracks = removeEmptyAndGroupTracks(tracks);
     }
 
-    private static Map<String, Map<String, List<Track>>> groupTracks(Collection<Track> tracks) {
+    private static Map<String, Map<String, List<Track>>> removeEmptyAndGroupTracks(Collection<Track> tracks) {
         try (var stream = tracks.stream()) {
-            return stream.collect(Collectors.groupingBy(Track::date, Collectors.groupingBy(Track::label)));
+            return stream.filter(t -> t.track().originalState() != TrackingCsv.TrackingCsvState.EMPTY)
+                    .collect(Collectors.groupingBy(Track::date, Collectors.groupingBy(Track::label)));
         }
     }
 
