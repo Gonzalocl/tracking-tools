@@ -86,20 +86,20 @@ public class Main {
         }
     }
 
-    private static Map<String, Properties> readLabelProperties(Path inputDirectory) {
+    private static Map<String, LabelProperties> readLabelProperties(Path inputDirectory) {
 
         try (var directories = Files.list(inputDirectory)) {
 
             return directories.filter(Files::isDirectory)
                     .map(Main::readProperties)
-                    .collect(Collectors.toMap(Properties::label, Function.identity()));
+                    .collect(Collectors.toMap(LabelProperties::label, Function.identity()));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static Properties readProperties(Path tracksDirectory) {
+    private static LabelProperties readProperties(Path tracksDirectory) {
 
         try (var lines = Files.lines(tracksDirectory.resolve("properties"))) {
 
@@ -109,7 +109,7 @@ public class Main {
                 throw new RuntimeException("Invalid label properties");
             }
 
-            return new Properties(list.get(0), list.get(1), Integer.parseInt(list.get(2)));
+            return new LabelProperties(list.get(0), list.get(1), Integer.parseInt(list.get(2)));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -167,5 +167,5 @@ public class Main {
 
     record Track(String date, String label, TrackingCsv.TrackingCsvData track) {}
 
-    record Properties(String label, String color, int order) {}
+    record LabelProperties(String label, String color, int order) {}
 }
